@@ -10,3 +10,20 @@ const inputDistance = document.querySelector(".form__input--distance");
 const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
+
+///////////////////////////////////////////////////////////////
+if (navigator.geolocation)
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      // console.log(position);
+      let { latitude } = position.coords;
+      let { longitude } = position.coords;
+      console.log(`https://www.google.com/maps/@${latitude},${longitude}  `);
+    },
+    function () {
+      alert("Couldn't get you location");
+    }
+  );
+//////////////////////////////////////////////////////////////
+
+// Displaying a map using LEAFLET Library
