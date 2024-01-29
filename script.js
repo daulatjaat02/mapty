@@ -3,14 +3,6 @@
 // prettier-ignore
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const form = document.querySelector(".form");
-const containerWorkouts = document.querySelector(".workouts");
-const inputType = document.querySelector(".form__input--type");
-const inputDistance = document.querySelector(".form__input--distance");
-const inputDuration = document.querySelector(".form__input--duration");
-const inputCadence = document.querySelector(".form__input--cadence");
-const inputElevation = document.querySelector(".form__input--elevation");
-
 ///////////////////////////////////////////////////////////////
 
 class Workout {
@@ -53,11 +45,19 @@ class Cycling extends Workout {
 // console.log(run1, Cyc1);
 
 //////////////////////////////////////////////////////
-
 // Application Architecture
+const form = document.querySelector(".form");
+const containerWorkouts = document.querySelector(".workouts");
+const inputType = document.querySelector(".form__input--type");
+const inputDistance = document.querySelector(".form__input--distance");
+const inputDuration = document.querySelector(".form__input--duration");
+const inputCadence = document.querySelector(".form__input--cadence");
+const inputElevation = document.querySelector(".form__input--elevation");
+
 class App {
   #map;
   #mapEvent;
+  #workouts = [];
   constructor() {
     this._getPosition();
     form.addEventListener("click", this._newWorkout.bind(this));
@@ -102,14 +102,54 @@ class App {
   }
 
   _newWorkout(e) {
+    let validInputs = (...inputs) =>
+      inputs.every((inp) => Number.isFinite(inp));
+    let allPositive = (...inputs) => inputs.every((inp) => inp > 0);
     e.preventDefault();
+    // Get data from form
+    let type = inputType.value;
+    let distance = +inputDistance.value;
+    let duration = +inputDuration.value;
+    let { lat, lng } = this.#mapEvent.latlng;
+    let workout;
+    // If workout activity running, create running object
+    if (type === "running") {
+      let cadence = +inputCadence.value;
+      // Check if data is valid
+      if (
+        !validInputs(distance, duration, cadence) ||
+        !allPositive(distance, duration, cadence)
+      )
+        return alert("Data is not valid");
+      workout = new Running([lat, lng], distance, duration, cadence);
+    }
+
+    // If workout activity cycling, create cycling object
+    if (type === "cycling") {
+      let elevation = +inputElevation.value;
+      if (
+        !validInputs(distance, duration, elevation) ||
+        !allPositive(distance, duration)
+      )
+        return alert("Data is not valid");
+      workout = new Cycling([lat, lng], distance, duration, elevation);
+    }
+
+    // Add new object to workout array
+    this.#workouts.push(workout);
+    console.log(workout);
+
+    this.renderWorkoutMarker(workout);
+
+    // Render workout on the list
+    // Hide the form + clear the input fields
     inputDistance.value =
       inputDuration.value =
       inputCadence.value =
       inputElevation.value =
         "";
-
-    let { lat, lng } = this.#mapEvent.latlng;
+  }
+  renderWorkoutMarker(workout) {
     L.marker([lat, lng])
       .addTo(this.#map)
       .bindPopup(
@@ -118,10 +158,10 @@ class App {
           minwidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: "running-popup",
+          className: `${type}-popup`,
         })
       )
-      .setPopupContent("Workout")
+      .setPopupContent(workout.distance)
       .openPopup();
   }
 }
