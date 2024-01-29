@@ -12,7 +12,49 @@ const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
 ///////////////////////////////////////////////////////////////
-// Refactoring for project architecture
+
+class Workout {
+  date = new Date();
+  id = (Date.now() + "").slice(-10);
+  constructor(coords, distance, duration) {
+    this.coords = coords; // [lat, lng]
+    this.distance = distance; // In km
+    this.duration = duration; // In min
+  }
+}
+
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calcPace();
+  }
+
+  calcPace() {
+    // min/km
+    this.pace = this.distance / this.duration;
+    return this.pace;
+  }
+}
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elevationGain) {
+    super(coords, distance, duration);
+    this.elevationGain = elevationGain;
+    this.calcSpeed();
+  }
+  calcSpeed() {
+    // km/h
+    this.speed = this.distance / (this.duration / 60);
+    return this.speed;
+  }
+}
+// let run1 = new Running([39, -12], 5.2, 24, 178);
+// let Cyc1 = new Cycling([39, -12], 27, 97, 523);
+// console.log(run1, Cyc1);
+
+//////////////////////////////////////////////////////
+
+// Application Architecture
 class App {
   #map;
   #mapEvent;
@@ -83,9 +125,4 @@ class App {
       .openPopup();
   }
 }
-
-//////////////////////////////////////////////////////////////
-
 let app = new App();
-
-/////////////////////////////////////////////////////////////
