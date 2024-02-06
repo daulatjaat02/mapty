@@ -124,7 +124,7 @@ a:visited {
   gap: 0.5rem 2.5rem;
 
   /* Match height and activity boxes */
-  height: 9.25rem;
+  height: 11.25rem;
   transition: all 0.5s, transform 1ms;
 }
 
@@ -167,26 +167,45 @@ a:visited {
   background-color: #fff;
 }
 
+/* styles.css */
+
 .form__btn {
-  display: none;
+  padding: 8px 29px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 50%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.copyright {
-  margin-top: auto;
-  font-size: 1.3rem;
-  text-align: center;
-  color: var(--color-light--1);
+.form__btn:hover {
+  background-color: #45a049; /* Darker shade on hover */
 }
 
-.twitter-link:link,
-.twitter-link:visited {
-  color: var(--color-light--1);
-  transition: all 0.2s;
+.form__btn:active {
+  transform: translateY(2px); /* Push button down slightly on click */
 }
 
-.twitter-link:hover,
-.twitter-link:active {
-  color: var(--color-light--2);
+.form__btn:focus {
+  outline: none; /* Remove focus outline */
+}
+
+/* Adding a shadow effect */
+.form__btn {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+/* Adding a gradient effect */
+.form__btn {
+  background-image: linear-gradient(
+    to right,
+    #4caf50,
+    #388e3c
+  ); /* Gradient background */
 }
 
 /* MAP */
@@ -217,4 +236,7 @@ a:visited {
 }
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
+}
+
+@media screen and (max-width: 1100px) {
 }
